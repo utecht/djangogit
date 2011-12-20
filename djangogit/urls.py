@@ -1,4 +1,6 @@
 from django.conf.urls.defaults import patterns, include, url
+import dgit.views
+
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -6,7 +8,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'djangogit.views.home', name='home'),
+    url(r'^$', dgit.views.index),
     # url(r'^djangogit/', include('djangogit.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
