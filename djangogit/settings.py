@@ -145,3 +145,6 @@ LOGGING = {
         },
     }
 }
+
+# the location of the git repos to be served by this app
+REPOS_DIR = os.path.join(os.path.dirname(__file__), 'dgit', 'repos')

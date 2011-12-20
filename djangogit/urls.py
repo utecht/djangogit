@@ -9,6 +9,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', dgit.views.index),
+    url(r'^repo/(?P<repo_name>.*)/(?P<ref>.*)/$', dgit.views.repo),
     # url(r'^djangogit/', include('djangogit.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

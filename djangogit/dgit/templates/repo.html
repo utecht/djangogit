@@ -1,0 +1,30 @@
+<h1>{{name}}</h1>
+
+<a href="/">Home</a>
+
+<div id = "refs">
+<p>Refs</p>
+<ul>
+{% for ref in refs %}
+<li><a href="../{{ref}}">{{ref}}</li></a>
+{% endfor %}
+</ul>
+</div>
+
+<div id = "commits">
+<p>Commits</p>
+<ul>
+{% for c in commits %}
+<li>{{c.message}}</li>
+{% endfor %}
+</ul>
+</div>
+
+<div id="files">
+<p>Files</p>
+<ul>
+{% for file in files %}
+<li><a href="file/{{file.2}}">{{file.1}}</a></li>
+{% endfor %}
+</ul>
+</div>
