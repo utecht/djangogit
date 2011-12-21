@@ -1,8 +1,8 @@
 # Create your views here.
 import os
 
-from django.shortcuts import render_to_response
-from dulwich.repo import Repo, Tree
+from django.shortcuts import render_to_response, Http404, HttpResponse
+from dulwich.repo import Repo, Tree, NotGitRepository
 
 import settings
 
@@ -20,10 +20,12 @@ def index(request):
 def repo(request, repo_name, ref):
     """main page for a single repo"""
     
-    #files = os.listdir(os.path.join(settings.REPOS_DIR, repo_name))
-    
     # attempt to open the repo, this may fail
-    repo = Repo(os.path.join(settings.REPOS_DIR, repo_name))
+    try:
+        repo = Repo(os.path.join(settings.REPOS_DIR, repo_name))
+    except NotGitRepository:
+        raise Http404
+    
     if ref != 'HEAD':
         ref = 'refs/heads/' + ref
     head = repo.refs[ref]
@@ -45,3 +47,10 @@ def repo(request, repo_name, ref):
                                    files=tree.entries(),
                                    refs=refs,
                                    commits=hist))
+    
+    
+def file_(request, repo_name, sha):
+    return HttpResponse("You requested file: {}".format(sha))
+
+def commit(request, repo_name, sha):
+    return HttpResponse("You requested commit: {}".format(sha))
