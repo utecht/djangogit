@@ -1,4 +1,6 @@
+{% extends "base.html" %}
 {% load date_extras %}
+{% block content %}
 
 <h1>{{name}}</h1>
 
@@ -8,3 +10,4 @@
 <pre>
 {{blob.data}}
 </pre>
+{% endblock %}

@@ -10,6 +10,7 @@
 	<p>Files</p>
 	<ul>
 		{% for file in files %}
+			{{ file.0}}
 			{% if file.3 == "tree" %}
 				<li><a href="/repo/{{name}}/tree/{{file.2}}">{{file.1}}</a></li>
 			{% else %}
