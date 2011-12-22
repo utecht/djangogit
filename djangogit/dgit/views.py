@@ -26,6 +26,7 @@ def repo(request, repo_name, ref):
     except NotGitRepository:
         raise Http404
     
+    branch = ref
     if ref != 'HEAD':
         ref = 'refs/heads/' + ref
     head = repo.refs[ref]
@@ -46,9 +47,10 @@ def repo(request, repo_name, ref):
                               dict(name=repo_name,
                                    files=tree.entries(),
                                    refs=refs,
-                                   commits=hist))
+                                   commits=hist,
+                                   branch=branch))
 
-def commit(request, repo_name, sha):
+def commit(request, repo_name, sha, ref):
     try:
         repo = Repo(os.path.join(settings.REPOS_DIR, repo_name))
     except NotGitRepository:
@@ -58,9 +60,10 @@ def commit(request, repo_name, sha):
     
     return render_to_response("commit.html",
                               dict(name=repo_name,
-                                   commit=commit))
+                                   commit=commit,
+                                   branch=ref))
 
-def tree(request, repo_name, sha):
+def tree(request, repo_name, sha, ref):
     try:
         repo = Repo(os.path.join(settings.REPOS_DIR, repo_name))
     except NotGitRepository:
@@ -91,23 +94,28 @@ def tree(request, repo_name, sha):
     return render_to_response("tree.html",
                               dict(name=repo_name,
                                    tree=tree,
-                                   files=files))
+                                   files=files,
+                                   branch=ref))
 
-def file_(request, repo_name, sha):
+def file_(request, repo_name, sha, ref, filename):
     try:
         repo = Repo(os.path.join(settings.REPOS_DIR, repo_name))
     except NotGitRepository:
         raise Http404
     
     blob = repo.get_blob(sha) #TODO: wrap in try
-    filename = 'replace this with real file name'
-    ext = 'py' # replace this with file extention
+    
+    dotpos = filename.rfind('.')
+    if dotpos != -1:
+        ext = filename[dotpos+1:]
+    else:
+        ext = 'text'
+    
     
     return render_to_response("file.html",
                               dict(name=repo_name,
                                    blob=blob,
                                    filename=filename,
-                                   ext=ext,
-                                   ))
+                                   ext=ext))
 
 

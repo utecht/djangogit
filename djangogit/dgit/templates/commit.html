@@ -14,8 +14,8 @@
 <p>Parents:</p>
 <ul>
 	{% for p in commit.parents %}
-	<li><a href="/repo/{{name}}/commit/{{p}}">{{p}}</a></li>
+	<li><a href="/repo/{{name}}/branch/{{branch}}/commit/{{p}}">{{p}}</a></li>
 	{% endfor %}
 </ul>
-<p>Tree: <a href="/repo/{{name}}/tree/{{commit.tree}}">{{commit.tree}}</a></p>
+<p>Tree: <a href="/repo/{{name}}/branch/{{branch}}/tree/{{commit.tree}}">{{commit.tree}}</a></p>
 {% endblock %}
