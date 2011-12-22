@@ -1,5 +1,6 @@
 # Create your views here.
 import os
+import stat
 
 from django.shortcuts import render_to_response, Http404, HttpResponse
 from dulwich.repo import Repo, Tree, NotGitRepository
@@ -48,9 +49,45 @@ def repo(request, repo_name, ref):
                                    refs=refs,
                                    commits=hist))
     
+def commit(request, repo_name, sha):
+    try:
+        repo = Repo(os.path.join(settings.REPOS_DIR, repo_name))
+    except NotGitRepository:
+        raise Http404
     
+    commit = repo.commit(sha)
+    
+    return render_to_response("commit.html",
+                              dict(name=repo_name,
+                                   commit=commit))
+
+def tree(request, repo_name, sha):
+    try:
+        repo = Repo(os.path.join(settings.REPOS_DIR, repo_name))
+    except NotGitRepository:
+        raise Http404
+    
+    tree = repo.tree(sha)
+    
+    #build the list of files
+    files = []
+    for e in tree.entries():
+        mode, path, sha = e
+        
+        if mode & stat.S_IFDIR:
+            kind = "tree"
+        else:
+            kind = "blob"
+        
+        mode = oct(mode) #make it human-readable
+    
+        files.append((mode, path, sha, kind))
+    
+    return render_to_response("tree.html",
+                              dict(name=repo_name,
+                                   tree=tree,
+                                   files=files))
+
 def file_(request, repo_name, sha):
     return HttpResponse("You requested file: {}".format(sha))
 
-def commit(request, repo_name, sha):
-    return HttpResponse("You requested commit: {}".format(sha))

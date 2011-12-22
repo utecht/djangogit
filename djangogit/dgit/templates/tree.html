@@ -1,0 +1,19 @@
+{% load date_extras %}
+
+<h1>repo <a href="/repo/{{name}}/branch/master/">{{name}}</a></h1>
+<h3>tree {{tree.id}}</h3>
+
+<a href="/">Home</a>
+
+<div id="files">
+	<p>Files</p>
+	<ul>
+		{% for file in files %}
+			{% if file.3 == "tree" %}
+				<li><a href="/repo/{{name}}/tree/{{file.2}}">{{file.1}}</a></li>
+			{% else %}
+				<li><a href="/repo/{{name}}/file/{{file.2}}">{{file.1}}</a></li>
+			{% endif %}
+		{% endfor %}
+	</ul>
+</div>

@@ -20,17 +20,17 @@
 		<li>
 			<span class="author">{{commit.author}}</span>
 			<span class="commit_date">{{commit.commit_time|date_from_unix}}</span>
-			<a href="/repo/{{name}}/commit/{{commit.id}}">{{commit.message}}</a>
+			<a href="/repo/{{name}}/commit/{{commit.id}}">{{commit.message|short_message}}</a>
 		</li>
 		{% endfor %}
 	</ul>
 </div>
 
 <div id="files">
-<p>Files</p>
-<ul>
-{% for file in files %}
-<li><a href="/repo/{{name}}/file/{{file.2}}">{{file.1}}</a></li>
-{% endfor %}
-</ul>
+	<p>Files</p>
+	<ul>
+		{% for file in files %}
+		<li><a href="/repo/{{name}}/file/{{file.2}}">{{file.1}}</a></li>
+		{% endfor %}
+	</ul>
 </div>
