@@ -17,7 +17,6 @@ def index(request):
                               dict(name="World",
                                    files=files))
     
-    
 def repo(request, repo_name, ref):
     """main page for a single repo"""
     
@@ -48,7 +47,7 @@ def repo(request, repo_name, ref):
                                    files=tree.entries(),
                                    refs=refs,
                                    commits=hist))
-    
+
 def commit(request, repo_name, sha):
     try:
         repo = Repo(os.path.join(settings.REPOS_DIR, repo_name))
@@ -89,5 +88,15 @@ def tree(request, repo_name, sha):
                                    files=files))
 
 def file_(request, repo_name, sha):
-    return HttpResponse("You requested file: {}".format(sha))
+    try:
+        repo = Repo(os.path.join(settings.REPOS_DIR, repo_name))
+    except NotGitRepository:
+        raise Http404
+    
+    blob = repo.get_blob(sha) #TODO: wrap in try
+    
+    return render_to_response("file.html",
+                              dict(name=repo_name,
+                                   blob=blob))
+
 
