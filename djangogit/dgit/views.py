@@ -100,9 +100,14 @@ def file_(request, repo_name, sha):
         raise Http404
     
     blob = repo.get_blob(sha) #TODO: wrap in try
+    filename = 'replace this with real file name'
+    ext = 'py' # replace this with file extention
     
     return render_to_response("file.html",
                               dict(name=repo_name,
-                                   blob=blob))
+                                   blob=blob,
+                                   filename=filename,
+                                   ext=ext,
+                                   ))
 
 

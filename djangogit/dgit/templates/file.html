@@ -4,11 +4,7 @@
 <link type="text/css" rel="stylesheet" href="/static/SyntaxHighlighter/styles/shCore.css"></link>
 <link type="text/css" rel="stylesheet" href="/static/SyntaxHighlighter/styles/shThemeDefault.css"></link>
 <script type="text/javascript" src="/static/SyntaxHighlighter/scripts/shCore.js"></script>
-<script type="text/javascript" src="/static/SyntaxHighlighter/scripts/shBrushJava.js"></script>
-<script type="text/javascript" src="/static/SyntaxHighlighter/scripts/shBrushPython.js"></script>
-<script type="text/javascript" src="/static/SyntaxHighlighter/scripts/shBrushXml.js"></script>
-<script type="text/javascript" src="/static/SyntaxHighlighter/scripts/shBrushSql.js"></script>
-
+<script type="text/javascript" src="/static/SyntaxHighlighter/scripts/shAutoloader.js"></script>
 {% endblock %}
 {% block content %}
 
@@ -17,10 +13,44 @@
 <a href="/">Home</a>
 
 <p>The file contents:</p>
-<pre class="brush: py">
+<pre title="{{filename}}"class="brush: {{ext}}">
 {{blob.data}}
 </pre>
 <script type="text/javascript">
-    SyntaxHighlighter.all();
+function path()
+{
+var args = arguments,
+result = [];
+for(var i = 0; i < args.length; i++)
+result.push(args[i].replace('@', '/static/SyntaxHighlighter/scripts/'));
+return result};
+SyntaxHighlighter.autoloader.apply(null, path(
+  'applescript @shBrushAppleScript.js',
+  'actionscript3 as3 @shBrushAS3.js',
+  'bash shell @shBrushBash.js',
+  'coldfusion cf @shBrushColdFusion.js',
+  'cpp c @shBrushCpp.js',
+  'c# c-sharp csharp @shBrushCSharp.js',
+  'css @shBrushCss.js',
+  'delphi pascal @shBrushDelphi.js',
+  'diff patch pas @shBrushDiff.js',
+  'erl erlang @shBrushErlang.js',
+  'groovy @shBrushGroovy.js',
+  'java @shBrushJava.js',
+  'jfx javafx @shBrushJavaFX.js',
+  'js jscript javascript @shBrushJScript.js',
+  'perl pl @shBrushPerl.js',
+  'php @shBrushPhp.js',
+  'text plain txt @shBrushPlain.js',
+  'py python @shBrushPython.js',
+  'ruby rails ror rb @shBrushRuby.js',
+  'sass scss @shBrushSass.js',
+  'scala @shBrushScala.js',
+  'sql @shBrushSql.js',
+  'vb vbnet @shBrushVb.js',
+  'xml xhtml xslt html @shBrushXml.js'
+));
+
+SyntaxHighlighter.all();
 </script>
 {% endblock %}
