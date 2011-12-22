@@ -1,5 +1,6 @@
+{% extends "base.html" %}
 {% load date_extras %}
-
+{% block content %}
 <h1>repo <a href="/repo/{{name}}/branch/master/">{{name}}</a></h1>
 <h3>tree {{tree.id}}</h3>
 
@@ -17,3 +18,4 @@
 		{% endfor %}
 	</ul>
 </div>
+{% endblock %}

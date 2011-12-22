@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import patterns, include, url
 import dgit.views
-
+import os
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -13,10 +13,8 @@ urlpatterns = patterns('',
     url(r'^repo/(?P<repo_name>.*)/file/(?P<sha>.*)/$', dgit.views.file_),
     url(r'^repo/(?P<repo_name>.*)/commit/(?P<sha>.*)/$', dgit.views.commit),
     url(r'^repo/(?P<repo_name>.*)/tree/(?P<sha>.*)/$', dgit.views.tree),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
+        {'document_root': os.path.join(os.path.dirname(__file__), 'static_media')})
 )

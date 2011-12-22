@@ -1,5 +1,6 @@
+{% extends "base.html" %}
 {% load date_extras %}
-
+{% block content %}
 <h1>{{name}}</h1>
 
 <a href="/">Home</a>
@@ -34,3 +35,4 @@
 		{% endfor %}
 	</ul>
 </div>
+{% endblock %}
