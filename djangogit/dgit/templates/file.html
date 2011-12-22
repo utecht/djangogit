@@ -1,5 +1,15 @@
 {% extends "base.html" %}
 {% load date_extras %}
+{% block head %}
+<link type="text/css" rel="stylesheet" href="/static/SyntaxHighlighter/styles/shCore.css"></link>
+<link type="text/css" rel="stylesheet" href="/static/SyntaxHighlighter/styles/shThemeDefault.css"></link>
+<script type="text/javascript" src="/static/SyntaxHighlighter/scripts/shCore.js"></script>
+<script type="text/javascript" src="/static/SyntaxHighlighter/scripts/shBrushJava.js"></script>
+<script type="text/javascript" src="/static/SyntaxHighlighter/scripts/shBrushPython.js"></script>
+<script type="text/javascript" src="/static/SyntaxHighlighter/scripts/shBrushXml.js"></script>
+<script type="text/javascript" src="/static/SyntaxHighlighter/scripts/shBrushSql.js"></script>
+
+{% endblock %}
 {% block content %}
 
 <h1>{{name}}</h1>
@@ -7,7 +17,10 @@
 <a href="/">Home</a>
 
 <p>The file contents:</p>
-<pre>
+<pre class="brush: py">
 {{blob.data}}
 </pre>
+<script type="text/javascript">
+    SyntaxHighlighter.all();
+</script>
 {% endblock %}
