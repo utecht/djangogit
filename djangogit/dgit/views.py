@@ -78,9 +78,15 @@ def tree(request, repo_name, sha):
         else:
             kind = "blob"
         
-        mode = oct(mode) #make it human-readable
+        #mode = oct(mode) #make it human-readable
     
-        files.append((mode, path, sha, kind))
+        obj = repo.get_object(sha)
+        size = 0
+        if kind == 'blob':
+            size = obj.raw_length()
+        
+    
+        files.append((mode, path, sha, kind, size))
     
     return render_to_response("tree.html",
                               dict(name=repo_name,

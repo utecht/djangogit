@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load date_extras %}
+{% block title %}DjangoGit: {{name}}/?{% endblock %}
 {% block content %}
 <h1>repo <a href="/repo/{{name}}/branch/master/">{{name}}</a></h1>
 <h3>tree {{tree.id}}</h3>
@@ -10,12 +11,13 @@
 	<p>Files</p>
 	<ul>
 		{% for file in files %}
-			{{ file.0}}
-			{% if file.3 == "tree" %}
-				<li><a href="/repo/{{name}}/tree/{{file.2}}">{{file.1}}</a></li>
-			{% else %}
-				<li><a href="/repo/{{name}}/file/{{file.2}}">{{file.1}}</a></li>
-			{% endif %}
+			<li>
+				<span class="permission">{{ file.0|pretty_perm}}</span>
+				<span class="filesize">{{ file.4}}</span>
+				<a href="/repo/{{name}}/{% if file.3 == "tree" %}tree{% else %}file{% endif %}/{{file.2}}">
+					{{file.1}}
+				</a>
+			</li>
 		{% endfor %}
 	</ul>
 </div>
