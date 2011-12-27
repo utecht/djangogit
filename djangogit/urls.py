@@ -9,7 +9,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', dgit.views.index),
-    url(r'^repo/(?P<repo_name>.*)/branch/(?P<ref>.*)/file/(?P<sha>.*)/(?P<filename>.*)/$', dgit.views.file_),
+    url(r'^repo/(?P<repo_name>.*)/branch/(?P<ref>.*)/file/(?P<sha>.*)/$', dgit.views.file_),
     url(r'^repo/(?P<repo_name>.*)/branch/(?P<ref>.*)/commit/(?P<sha>.*)/$', dgit.views.commit),
     url(r'^repo/(?P<repo_name>.*)/branch/(?P<ref>.*)/tree/(?P<sha>.*)/$', dgit.views.tree),
     url(r'^repo/(?P<repo_name>.*)/branch/(?P<ref>.*)/$', dgit.views.repo),

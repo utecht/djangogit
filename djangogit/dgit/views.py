@@ -96,6 +96,11 @@ def tree(request, repo_name, sha, ref):
     except NotGitRepository:
         raise Http404
     
+    if 'f' in request.GET:
+        path = request.GET['f'] # if it exists?
+    else:
+        path = ""
+    
     tree = repo.tree(sha)
     
     files = getFiles(tree, repo)
@@ -104,15 +109,19 @@ def tree(request, repo_name, sha, ref):
                               dict(name=repo_name,
                                    tree=tree,
                                    files=files,
-                                   branch=ref))
+                                   branch=ref,
+                                   path=path))
 
-def file_(request, repo_name, sha, ref, filename):
+def file_(request, repo_name, sha, ref):
     try:
         repo = Repo(os.path.join(settings.REPOS_DIR, repo_name))
     except NotGitRepository:
         raise Http404
     
     blob = repo.get_blob(sha) #TODO: wrap in try
+    
+    
+    filename = request.GET['f']
     
     dotpos = filename.rfind('.')
     if dotpos != -1:

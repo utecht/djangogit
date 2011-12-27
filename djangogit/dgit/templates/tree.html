@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}DjangoGit: {{name}}/?{% endblock %}
 {% block content %}
-<h1>repo <a href="/repo/{{name}}/branch/master/">{{name}}</a></h1>
+<h2><a href="/repo/{{name}}/branch/master/">{{name}}</a>{% if path %} / <a href="">{{path}}</a>{% endif %}</h2>
 <h3>tree {{tree.id}}</h3>
 
 <a href="/">Home</a>
