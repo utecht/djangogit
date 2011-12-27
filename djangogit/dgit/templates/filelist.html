@@ -1,0 +1,13 @@
+{% load date_extras %}
+<ul>
+    {% for file in files %}
+        <li>
+            <span class="permission">{{ file.0|pretty_perm}}</span>
+            <span class="filesize">{{ file.4}}</span>
+            <a href="/repo/{{name}}/branch/{{branch}}/{% if file.3 == "tree" %}tree{% else %}file{% endif %}/{{file.2}}{% if file.3 != "tree" %}/{{file.1}}{% endif %}">
+                {{file.1}}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+
