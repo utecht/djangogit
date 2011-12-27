@@ -7,7 +7,33 @@ from dulwich.repo import Repo, Tree, NotGitRepository
 
 import settings
 
+# some helper functions
+def getFiles(tree, repo):
+    """get a pretty list of files from a tree"""
+    
+    #build the list of files
+    files = []
+    for e in tree.entries():
+        mode, path, sha = e
+        
+        if mode & stat.S_IFDIR:
+            kind = "tree"
+        else:
+            kind = "blob"
+        
+        #mode = oct(mode) #make it human-readable
+    
+        obj = repo.get_object(sha)
+        size = 0
+        if kind == 'blob':
+            size = obj.raw_length()
+    
+        files.append((mode, path, sha, kind, size))
+        
+    return files
 
+
+# the actual views
 def index(request):
     """display the list of available git projects"""
     
@@ -31,7 +57,6 @@ def repo(request, repo_name, ref):
         ref = 'refs/heads/' + ref
     head = repo.refs[ref]
     
-    
     refs = []
     for r in list(repo.refs.keys()):
         pos = r.rfind('/')
@@ -41,11 +66,13 @@ def repo(request, repo_name, ref):
     commit = repo.commit(head)
     tree = repo.tree(commit.tree)
     
-    hist = repo.revision_history(head)[:5]
+    files = getFiles(tree, repo)
+    
+    hist = repo.revision_history(head)[:15]
     
     return render_to_response("repo.html",
                               dict(name=repo_name,
-                                   files=tree.entries(),
+                                   files=files,
                                    refs=refs,
                                    commits=hist,
                                    branch=branch))
@@ -71,25 +98,7 @@ def tree(request, repo_name, sha, ref):
     
     tree = repo.tree(sha)
     
-    #build the list of files
-    files = []
-    for e in tree.entries():
-        mode, path, sha = e
-        
-        if mode & stat.S_IFDIR:
-            kind = "tree"
-        else:
-            kind = "blob"
-        
-        #mode = oct(mode) #make it human-readable
-    
-        obj = repo.get_object(sha)
-        size = 0
-        if kind == 'blob':
-            size = obj.raw_length()
-        
-    
-        files.append((mode, path, sha, kind, size))
+    files = getFiles(tree, repo)
     
     return render_to_response("tree.html",
                               dict(name=repo_name,
@@ -111,11 +120,8 @@ def file_(request, repo_name, sha, ref, filename):
     else:
         ext = 'text'
     
-    
     return render_to_response("file.html",
                               dict(name=repo_name,
                                    blob=blob,
                                    filename=filename,
                                    ext=ext))
-
-
