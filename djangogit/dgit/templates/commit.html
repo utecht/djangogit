@@ -4,8 +4,6 @@
 <h1>repo <a href="/repo/{{name}}/branch/master/">{{name}}</a></h1>
 <h3>commit {{commit.id}}</h3>
 
-<a href="/">Home</a>
-
 <p>Author: {{commit.author}}</p>
 <p>Date: {{commit.commit_time|date_from_unix}}</p>
 <p>Message: </p>
@@ -17,5 +15,8 @@
 	<li><a href="/repo/{{name}}/branch/{{branch}}/commit/{{p}}">{{p}}</a></li>
 	{% endfor %}
 </ul>
-<p>Tree: <a href="/repo/{{name}}/branch/{{branch}}/tree/{{commit.tree}}">{{commit.tree}}</a></p>
+<div id="files">
+    <p>Files</p>
+    {% include "filelist.html" %}
+</div>
 {% endblock %}

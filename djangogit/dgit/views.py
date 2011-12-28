@@ -82,12 +82,15 @@ def commit(request, repo_name, sha, ref):
         repo = Repo(os.path.join(settings.REPOS_DIR, repo_name))
     except NotGitRepository:
         raise Http404
-    
     commit = repo.commit(sha)
-    
+    tree = repo.tree(commit.tree)
+    files = getFiles(tree, repo)
+
     return render_to_response("commit.html",
                               dict(name=repo_name,
                                    commit=commit,
+                                   tree=tree,
+                                   files=files,
                                    branch=ref))
 
 def tree(request, repo_name, sha, ref):

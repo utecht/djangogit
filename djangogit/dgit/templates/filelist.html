@@ -3,7 +3,7 @@
     {% for file in files %}
     <tr>
             <td class="permission">{{ file.0|pretty_perm}}</td>
-            <td class="filesize">{{ file.4}}</td>
+            <td class="filesize">{{ file.4|filesizeformat}}</td>
             <td><a href="/repo/{{name}}/branch/{{branch}}/{% if file.3 == "tree" %}tree{% else %}file{% endif %}/{{file.2}}?f={% if path %}{{path}}/{% endif %}{{file.1}}">
                 {{file.1}}
         </a></td>
