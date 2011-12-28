@@ -132,7 +132,7 @@ def tree(request, repo_name, sha, ref):
                                    branch=ref,
                                    path=path))
 
-def file_(request, repo_name, sha, ref):
+def file_(request, repo_name, sha):
     try:
         repo = Repo(os.path.join(settings.REPOS_DIR, repo_name))
     except NotGitRepository:
