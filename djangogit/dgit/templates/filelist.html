@@ -1,5 +1,9 @@
 {% load date_extras %}
 <table id="filetable">
+    <tr>
+        <td class="permission">{{000000|pretty_perm}}</td>
+        <td class="filesize">{{0|filesizeformat}}</td>
+        <td><a class="ajaxtree" href="..">..</a></td>
     {% for file in files %}
     <tr>
             <td class="permission">{{ file.0|pretty_perm}}</td>
@@ -11,13 +15,16 @@
     {% endfor %}
 </table>
 <script type="text/javascript">
+    function bindAjax(){
+        $('.ajaxtree').bind("click", treeajax);
+    }
     function treeajax(a){
         a.preventDefault();
         $('#filetable').load(a.currentTarget.href + ' #filetable', function(){
-                $('.ajaxtree').bind("click", treeajax);
-                });
+                bindAjax();
+        });
     }
     $(document).ready(function(){
-        $('.ajaxtree').bind("click", treeajax);
-        });
+        bindAjax();
+    });
 </script>
