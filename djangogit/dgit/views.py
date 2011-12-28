@@ -32,6 +32,19 @@ def getFiles(tree, repo):
         
     return files
 
+def getBranch(request):
+    """get the branch name from GET, or return master"""
+    
+    # TODO: This could also check that the
+    #       given branch is a real branch
+    #       Would require passing repo as well.
+    
+    if 'b' in request.GET:
+        branch = request.GET['b']
+    else:
+        branch = 'master'
+        
+    return branch
 
 # the actual views
 def index(request):
@@ -43,7 +56,7 @@ def index(request):
                               dict(name="World",
                                    files=files))
     
-def repo(request, repo_name, ref):
+def repo(request, repo_name):
     """main page for a single repo"""
     
     # attempt to open the repo, this may fail
@@ -52,9 +65,10 @@ def repo(request, repo_name, ref):
     except NotGitRepository:
         raise Http404
     
-    branch = ref
-    if ref != 'HEAD':
-        ref = 'refs/heads/' + ref
+    branch = getBranch(request)
+    
+    if branch != 'HEAD':
+        ref = 'refs/heads/' + branch
     head = repo.refs[ref]
     
     refs = []
@@ -77,7 +91,7 @@ def repo(request, repo_name, ref):
                                    commits=hist,
                                    branch=branch))
 
-def commit(request, repo_name, sha, ref):
+def commit(request, repo_name, sha):
     try:
         repo = Repo(os.path.join(settings.REPOS_DIR, repo_name))
     except NotGitRepository:
@@ -93,7 +107,7 @@ def commit(request, repo_name, sha, ref):
                                    commit=commit,
                                    tree=tree,
                                    files=files,
-                                   branch=ref,
+                                   branch=getBranch(request),
                                    parents=parents))
 
 def tree(request, repo_name, sha, ref):
