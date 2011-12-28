@@ -12,7 +12,19 @@
                 {% block head %}{% endblock %}
         </head>
         <body>
-            {% block content %}{% endblock %}
+            <div id="header">
+               <div id="nav">
+                    <ul>
+                        <li><a href="/">Repos</a></li>
+                        <li>Stuff</li>
+                        <li>Junk</li>
+                    </ul>
+                </div><!-- end nav -->
+                <h1>Django Git</h1>
+            </div><!-- end header -->
+            <div id ="wrap">
+                {% block content %}{% endblock %}
+            </div><!-- end nav -->
         </body>
 </html>
 
