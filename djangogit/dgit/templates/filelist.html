@@ -8,7 +8,7 @@
     <tr>
             <td class="permission">{{ file.0|pretty_perm}}</td>
             <td class="filesize">{{ file.4|filesizeformat}}</td>
-            <td><a {% if file.3 == "tree" %} class="ajaxtree" {% endif %}href="/repo/{{name}}/{% if file.3 == "tree" %}tree{% else %}file{% endif %}/{{file.2}}?f={% if path %}{{path}}/{% endif %}{{file.1}}">
+            <td><a {% if file.3 == "tree" %} class="ajaxtree" {% endif %}href="/repo/{{name}}/{% if file.3 == "tree" %}filetree{% else %}file{% endif %}/{{file.2}}?f={% if path %}{{path}}/{% endif %}{{file.1}}">
                 {{file.1}}
         </a></td>
         </tr>
