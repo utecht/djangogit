@@ -86,12 +86,15 @@ def commit(request, repo_name, sha, ref):
     tree = repo.tree(commit.tree)
     files = getFiles(tree, repo)
 
+    parents = map(repo.get_object, commit.parents)
+
     return render_to_response("commit.html",
                               dict(name=repo_name,
                                    commit=commit,
                                    tree=tree,
                                    files=files,
-                                   branch=ref))
+                                   branch=ref,
+                                   parents=parents))
 
 def tree(request, repo_name, sha, ref):
     try:

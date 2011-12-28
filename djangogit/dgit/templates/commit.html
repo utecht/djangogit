@@ -11,8 +11,8 @@
 
 <p>Parents:</p>
 <ul>
-	{% for p in commit.parents %}
-	<li><a href="/repo/{{name}}/branch/{{branch}}/commit/{{p}}">{{p}}</a></li>
+	{% for p in parents %}
+	<li><a href="/repo/{{name}}/branch/{{branch}}/commit/{{p.id}}">{{p.message|short_message}}</a></li>
 	{% endfor %}
 </ul>
 <div id="files">
