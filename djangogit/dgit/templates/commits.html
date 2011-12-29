@@ -3,13 +3,11 @@
 {% block content %}
 <h1>{{name}} [ {{branch}} ]</h1>
 
-<a href="/">Home</a>
-
 <div id = "branches">
 	<p>Branches:</p>
 	<ul>
 		{% for ref in refs %}
-		<li><a href="/repo/{{name}}?b={{ref}}">{{ref}}</li></a>
+		<li><a href="/repo/{{name}}/commits/{{ref}}">{{ref}}</li></a>
 		{% endfor %}
 	</ul>
 </div>
@@ -21,13 +19,9 @@
 		<li>
 			<span class="author">{{commit.author}}</span>
 			<span class="commit_date">{{commit.commit_time|date_from_unix}}</span>
-			<a href="/repo/{{name}}/commit/{{commit.id}}{% if branch != 'master' %}?b={{branch}}{% endif %}">{{commit.message|short_message}}</a>
+			<a href="/repo/{{name}}/tree/{{commit.id}}">{{commit.message|short_message}}</a>
 		</li>
 		{% endfor %}
 	</ul>
-</div>
-<div id="files">
-    <p>Files on branch <strong>{{branch}}</strong> at most recent commit:</p>
-    {% include "filelist.html" %}
 </div>
 {% endblock %}

@@ -1,7 +1,19 @@
 {% extends "base.html" %}
 {% load date_extras %}
 {% block content %}
-<h1><a href="/repo/{{name}}">{{name}}</a> [ <a href="/repo/{{name}}/?b={{branch}}">{{branch}}</a> ]</h1>
+<h1><a href="/repo/{{name}}">{{name}}</a></h1>
+<div id = "branches">
+	<p>Branches:</p>
+	<ul>
+		{% for ref in branches %}
+		<li><a href="/repo/{{name}}/tree/{{ref}}">{{ref}}</li></a>
+		{% endfor %}
+	</ul>
+</div>
+
+<a href = "/repo/{{name}}/commits">All Commits</a>
+<a href = "/repo/{{name}}/commits/{{commit.id}}">Commit history for this tree</a>
+
 <h3>commit {{commit.id}}</h3>
 
 <p>Author: {{commit.author}}</p>
@@ -12,7 +24,7 @@
 <p>Parents:</p>
 <ul>
 	{% for p in parents %}
-	<li><a href="/repo/{{name}}/commit/{{p.id}}{% if branch != 'master' %}?b={{branch}}{% endif %}">{{p.message|short_message}}</a></li>
+	<li><a href="/repo/{{name}}/tree/{{p.id}}">{{p.message|short_message}}</a></li>
 	{% endfor %}
 </ul>
 <div id="files">

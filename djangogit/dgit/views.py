@@ -3,7 +3,7 @@ import os
 import stat
 
 from django.shortcuts import render_to_response, Http404, HttpResponse
-from dulwich.repo import Repo, Tree, NotGitRepository
+from dulwich.repo import Repo, Tree, NotGitRepository, NotTreeError
 
 import settings
 
@@ -46,6 +46,15 @@ def getBranch(request):
         
     return branch
 
+def getBranches(repo):
+    # get the branches
+    refs = []
+    for r in list(repo.refs.keys()):
+        pos = r.rfind('/')
+        if pos != -1 and 'remotes' not in r:
+            refs.append(r[pos + 1:])
+    return refs
+
 # the actual views
 def index(request):
     """display the list of available git projects"""
@@ -56,47 +65,58 @@ def index(request):
                               dict(name="World",
                                    files=files))
     
-def repo(request, repo_name):
-    """main page for a single repo"""
+def commits(request, repo_name, sha='master'):
+    """display the commit history for the given sha/branch"""
     
     # attempt to open the repo, this may fail
     try:
         repo = Repo(os.path.join(settings.REPOS_DIR, repo_name))
     except NotGitRepository:
         raise Http404
+            
+    # was the supplied sha really a ref?
+    sha_ref = 'refs/heads/' + sha  
+    if sha_ref in repo.refs:
+        sha = repo.refs[sha_ref]
+
+    try:
+        commit = repo.commit(sha)
+    except:
+        raise Http404
     
-    branch = getBranch(request)
+    refs = getBranches(repo)
     
-    if branch != 'HEAD':
-        ref = 'refs/heads/' + branch
-    head = repo.refs[ref]
-    
-    refs = []
-    for r in list(repo.refs.keys()):
-        pos = r.rfind('/')
-        if pos != -1:
-            refs.append(r[pos + 1:])
-    
-    commit = repo.commit(head)
     tree = repo.tree(commit.tree)
     
     files = getFiles(tree, repo)
     
-    hist = repo.revision_history(head)[:15]
+    hist = repo.revision_history(commit.id)
     
-    return render_to_response("repo.html",
+    return render_to_response("commits.html",
                               dict(name=repo_name,
                                    files=files,
                                    refs=refs,
-                                   commits=hist,
-                                   branch=branch))
+                                   commits=hist))
 
-def commit(request, repo_name, sha):
+def tree(request, repo_name, sha='master'):
     try:
         repo = Repo(os.path.join(settings.REPOS_DIR, repo_name))
     except NotGitRepository:
         raise Http404
-    commit = repo.commit(sha)
+    
+    # was the supplied sha really a ref?
+    sha_ref = 'refs/heads/' + sha 
+    if sha_ref in repo.refs:
+        sha = repo.refs[sha_ref]
+
+    try:
+        commit = repo.commit(sha)
+    except:
+        raise Http404
+    
+    # get the branches
+    refs = getBranches(repo)
+    
     tree = repo.tree(commit.tree)
     files = getFiles(tree, repo)
 
@@ -107,43 +127,56 @@ def commit(request, repo_name, sha):
                                    commit=commit,
                                    tree=tree,
                                    files=files,
-                                   branch=getBranch(request),
+                                   branches=refs,
                                    parents=parents))
 
-def tree(request, repo_name, sha):
+def filetree(request, repo_name, sha, path=''):
     try:
         repo = Repo(os.path.join(settings.REPOS_DIR, repo_name))
     except NotGitRepository:
         raise Http404
     
-    branch = getBranch(request)
+    # this may be needed, depnding on how we do branches
+    #branch = getBranch(request)
     
-    if 'f' in request.GET:
-        path = request.GET['f'] # if it exists?
-    else:
-        path = ""
+    # check to see if a specific commit has been passed
+    # if not, then assume head
+
+    sha_ref = 'refs/heads/' + sha 
+    if sha_ref in repo.refs:
+        sha = repo.refs[sha_ref]
+       
+    #raise Exception('%s - %s' % (sha, path))
+    commit = repo.commit(sha)
     
-    tree = repo.tree(sha)
+    tree = repo.tree(commit.tree)
     
-    files = getFiles(tree, repo)
+    # Lookup the path; may be a tree or a blob
+    obj = tree.lookup_path(repo.get_object, path)[1]
+    
+    try: 
+        # assume it's a tree
+        new_tree = repo.tree(obj)
+    except NotTreeError:
+        # well maybe it was a file (blob)
+        return file_(request, repo_name, repo, sha=obj, path=path)
+        
+    files = getFiles(new_tree, repo)
     
     return render_to_response("tree.html",
                               dict(name=repo_name,
-                                   tree=tree,
                                    files=files,
-                                   branch=branch,
+                                   branch='master',
                                    path=path))
 
-def file_(request, repo_name, sha):
+def file_(request, repo_name, repo, sha, path):
+
     try:
-        repo = Repo(os.path.join(settings.REPOS_DIR, repo_name))
-    except NotGitRepository:
+        blob = repo.get_blob(sha)
+    except:
         raise Http404
     
-    blob = repo.get_blob(sha) #TODO: wrap in try
-    
-    
-    filename = request.GET['f']
+    filename = path
     
     dotpos = filename.rfind('.')
     if dotpos != -1:
