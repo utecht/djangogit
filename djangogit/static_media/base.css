@@ -45,6 +45,10 @@ body {
     padding:            0;
 }
 
+#files {
+    margin-bottom:      25px;
+}
+
 #files table{
     width:              100%;
     padding:            5px;
