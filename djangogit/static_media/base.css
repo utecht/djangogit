@@ -1,60 +1,60 @@
 #header {
-    border:         1px solid white;
-    background-color:#EBEBEB;
-    width:          100%;
-    text-align:     left;
-    margin-bottom:  0px; 
-    margin:         0;
+    border:             1px solid white;
+    background-color:   #EBEBEB;
+    width:              100%;
+    text-align:         left;
+    margin-bottom:      0px; 
+    margin:             0;
 }
 
 #header h1 {
-    padding-left:   50px;
+    padding-left:       50px;
 }
 
 #nav {
-    float:          right;
-    padding-right:  50px;
-    padding-top:    10px;
+    float:              right;
+    padding-right:      50px;
+    padding-top:        10px;
 }
 
 #nav a {
-    text-decoration:none;
+    text-decoration:    none;
 }
 
 #nav ul li {
-    display:        inline;
-    padding-right:  10px;
+    display:            inline;
+    padding-right:      10px;
 }
 
 #wrap {
-    border-left:    1px solid white;
-    border-right:   1px solid white;
-    margin-left:    auto;
-    margin-right:   auto;
-    margin-top:     0px;
-    width:          960px;
-    background-color:white;
-    text-align:     left; 
-    padding:        5px;
+    border-left:        1px solid white;
+    border-right:       1px solid white;
+    margin-left:        auto;
+    margin-right:       auto;
+    margin-top:         0px;
+    width:              960px;
+    background-color:   white;
+    text-align:         left; 
+    padding:            5px;
 }
 
 body {
-    text-align:     center;
-    background-color:#D2D2D2;
-    margin:         0;
-    padding:        0;
+    text-align:         center;
+    background-color:   #D2D2D2;
+    margin:             0;
+    padding:            0;
 }
 
 #files table{
-    width:          100%;
-    padding:        5px;
-    border-collapse:collapse;
-    border-spacing: 0;
+    width:              100%;
+    padding:            5px;
+    border-collapse:    collapse;
+    border-spacing:     0;
 }
 
 #files tr {
-    background-color:#EBEBEB;
-    border:         1px solid white;
+    background-color:   #EBEBEB;
+    border:             1px solid white;
 }
 
 #files td {
@@ -65,16 +65,27 @@ body {
 }
 
 #files .permission {
-    padding-left:   5px;
-    padding-right:  15px;
-    width:          75px;
+    padding-left:       5px;
+    padding-right:      15px;
+    width:              75px;
 }
 
 #files .filesize {
-    text-align:     right;
-    width:          75px;
+    text-align:         right;
+    width:              75px;
 }
 
 ul {
-    list-style-type:none;
+    list-style-type:    none;
+}
+
+#repos a{
+    text-decoration:    none;
+}
+
+#repos li {
+    background-color:   #EBEBEB;
+    margin-right:       150px;
+    border:             5px solid #EBEBEB;
+    border-radius:      10px;
 }
