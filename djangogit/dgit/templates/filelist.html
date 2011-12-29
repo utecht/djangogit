@@ -22,7 +22,16 @@
         a.preventDefault();
         $('#filetable').load(a.currentTarget.href + ' #filetable', function(){
                 bindAjax();
+                folder = a.currentTarget.innerText.replace(/^\s+|\s+$/g, '') + '/';
+                newURL = window.location.href + folder;
+                window.history.pushState(null, "", newURL);
         });
+    }
+    window.onpopstate = function(e){
+        if(e.state){
+            // reload the page
+            window.location.href = window.location.href
+        }
     }
     $(document).ready(function(){
         bindAjax();
