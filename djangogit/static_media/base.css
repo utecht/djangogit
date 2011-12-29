@@ -86,6 +86,7 @@ ul {
 #repos li {
     background-color:   #EBEBEB;
     margin-right:       150px;
+    margin-bottom:      15px;
     border:             5px solid #EBEBEB;
     border-radius:      10px;
 }
