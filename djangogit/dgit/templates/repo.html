@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load date_extras %}
+{% load gravatar %}
 {% block content %}
 <h1>{{name}} [ {{branch}} ]</h1>
 
@@ -19,7 +20,7 @@
 	<ul>
 		{% for commit in commits %}
 		<li>
-			<span class="author">{{commit.author}}</span>
+			<span class="author">{{commit.author|gravatarURL}}</span>
 			<span class="commit_date">{{commit.commit_time|date_from_unix}}</span>
 			<a href="/repo/{{name}}/commit/{{commit.id}}{% if branch != 'master' %}?b={{branch}}{% endif %}">{{commit.message|short_message}}</a>
 		</li>
