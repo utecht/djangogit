@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     url(r'^repo/(?P<repo_name>.*)/filetree/(?P<sha>.*)/$', dgit.views.filetree),
     url(r'^repo/(?P<repo_name>.*)/commits/(?P<sha>.*)/$', dgit.views.commits),
     url(r'^repo/(?P<repo_name>.*)/commits/$', dgit.views.commits),
+    url(r'^repo/(?P<repo_name>.*)/diff/(?P<sha>.*)/$', dgit.views.diff),
     url(r'^repo/(?P<repo_name>.*)/$', dgit.views.tree),
 
     

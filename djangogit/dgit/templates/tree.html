@@ -1,10 +1,37 @@
 {% extends "base.html" %}
-{% block title %}DjangoGit: {{name}}/?{% endblock %}
+{% load date_extras %}
+{% load gravatar %}
 {% block content %}
-<h2><a href="/repo/{{name}}/branch/master/">{{name}}</a>{% if path %} / <a href="">{{path}}</a>{% endif %}</h2>
+<h1><a href="/repo/{{name}}">{{name}}</a></h1>
+<div id = "branches">
+	<p>Branches:</p>
+	<ul>
+		{% for ref in branches %}
+		<li><a href="/repo/{{name}}/tree/{{ref}}">{{ref}}</li></a>
+		{% endfor %}
+	</ul>
+</div>
+<div id = "commits">
+	<p>Commits:</p>
+	<ul>
+		<li><a href = "/repo/{{name}}/commits">All Commits</a></li>
+		<li><a href = "/repo/{{name}}/commits/{{commit.id}}">Commit history for this tree</a></li>
+	</ul>
+</div>
 
-<a href="/">Home</a>
+<a href="/repo/{{name}}/diff/{{commit.id}}">View diff</a>
 
+<p>Author: {{commit.author|gravatarURL}}</p>
+<p>Date: {{commit.commit_time|date_from_unix}}</p>
+<p>Message: </p>
+<pre>{{commit.message}}</pre>
+
+<p>Parents:</p>
+<ul>
+	{% for p in parents %}
+	<li><a href="/repo/{{name}}/tree/{{p.id}}">{{p.message|short_message}}</a></li>
+	{% endfor %}
+</ul>
 <div id="files">
     <p>Files</p>
     {% include "filelist.html" %}

@@ -1,59 +1,12 @@
 # Create your views here.
 import os
-import stat
+
 
 from django.shortcuts import render_to_response, Http404, HttpResponse
 from dulwich.repo import Repo, Tree, NotGitRepository, NotTreeError
 
 import settings
-
-# some helper functions
-def getFiles(tree, repo):
-    """get a pretty list of files from a tree"""
-    
-    #build the list of files
-    files = []
-    for e in tree.entries():
-        mode, path, sha = e
-        
-        if mode & stat.S_IFDIR:
-            kind = "tree"
-        else:
-            kind = "blob"
-        
-        #mode = oct(mode) #make it human-readable
-    
-        obj = repo.get_object(sha)
-        size = 0
-        if kind == 'blob':
-            size = obj.raw_length()
-    
-        files.append((mode, path, sha, kind, size))
-        
-    return files
-
-def getBranch(request):
-    """get the branch name from GET, or return master"""
-    
-    # TODO: This could also check that the
-    #       given branch is a real branch
-    #       Would require passing repo as well.
-    
-    if 'b' in request.GET:
-        branch = request.GET['b']
-    else:
-        branch = 'master'
-        
-    return branch
-
-def getBranches(repo):
-    # get the branches
-    refs = []
-    for r in list(repo.refs.keys()):
-        pos = r.rfind('/')
-        if pos != -1 and 'remotes' not in r:
-            refs.append(r[pos + 1:])
-    return refs
+import util
 
 # the actual views
 def index(request):
@@ -68,11 +21,7 @@ def index(request):
 def commits(request, repo_name, sha='master'):
     """display the commit history for the given sha/branch"""
     
-    # attempt to open the repo, this may fail
-    try:
-        repo = Repo(os.path.join(settings.REPOS_DIR, repo_name))
-    except NotGitRepository:
-        raise Http404
+    repo = util.getRepo(repo_name)
             
     # was the supplied sha really a ref?
     sha_ref = 'refs/heads/' + sha  
@@ -84,11 +33,11 @@ def commits(request, repo_name, sha='master'):
     except:
         raise Http404
     
-    refs = getBranches(repo)
+    refs = util.getBranches(repo)
     
     tree = repo.tree(commit.tree)
     
-    files = getFiles(tree, repo)
+    files = util.getFiles(tree, repo)
     
     hist = repo.revision_history(commit.id)
     
@@ -99,10 +48,8 @@ def commits(request, repo_name, sha='master'):
                                    commits=hist))
 
 def tree(request, repo_name, sha='master'):
-    try:
-        repo = Repo(os.path.join(settings.REPOS_DIR, repo_name))
-    except NotGitRepository:
-        raise Http404
+
+    repo = util.getRepo(repo_name)
     
     # was the supplied sha really a ref?
     sha_ref = 'refs/heads/' + sha 
@@ -115,14 +62,14 @@ def tree(request, repo_name, sha='master'):
         raise Http404
     
     # get the branches
-    refs = getBranches(repo)
+    refs = util.getBranches(repo)
     
     tree = repo.tree(commit.tree)
-    files = getFiles(tree, repo)
+    files = util.getFiles(tree, repo)
 
     parents = map(repo.get_object, commit.parents)
 
-    return render_to_response("commit.html",
+    return render_to_response("tree.html",
                               dict(name=repo_name,
                                    commit=commit,
                                    tree=tree,
@@ -161,9 +108,9 @@ def filetree(request, repo_name, sha, path=''):
         # well maybe it was a file (blob)
         return file_(request, repo_name, repo, sha=obj, path=path)
         
-    files = getFiles(new_tree, repo)
+    files = util.getFiles(new_tree, repo)
     
-    return render_to_response("tree.html",
+    return render_to_response("filetree.html",
                               dict(name=repo_name,
                                    files=files,
                                    branch='master',
@@ -189,3 +136,18 @@ def file_(request, repo_name, repo, sha, path):
                                    blob=blob,
                                    filename=filename,
                                    ext=ext))
+
+def diff(request, repo_name, sha):
+    
+    repo = util.getRepo(repo_name)
+    commit = repo.commit(sha)
+    new_tree = commit.tree
+    
+    old_commit = repo.commit(commit.parents[0]) 
+    old_tree = old_commit.tree
+    
+    diffs = util.get_tree_diff(repo.object_store, old_tree, new_tree)
+    
+    return render_to_response("diff.html", dict(name=repo_name,
+                                                commit=commit,
+                                                diffs=diffs))

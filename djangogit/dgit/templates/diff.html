@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load date_extras %}
+{% load gravatar %}
+{% block title %}DjangoGit: Diff{% endblock %}
+{% block head %}
+<link type="text/css" rel="stylesheet" href="/static/SyntaxHighlighter/styles/shCore.css"></link>
+<link type="text/css" rel="stylesheet" href="/static/SyntaxHighlighter/styles/shThemeDefault.css"></link>
+<script type="text/javascript" src="/static/SyntaxHighlighter/scripts/shCore.js"></script>
+<script type="text/javascript" src="/static/SyntaxHighlighter/scripts/shBrushDiff.js"></script>
+{% endblock %}
+{% block content %}
+<h2><a href="/repo/{{name}}/tree/master/">{{name}}</a>{% if path %} / <a href="">{{path}}</a>{% endif %}</h2>
+
+<p>Author: {{commit.author|gravatarURL}}</p>
+<p>Date: {{commit.commit_time|date_from_unix}}</p>
+<p>Message: </p>
+<pre>{{commit.message}}</pre>
+
+{% for diff in diffs %}
+<pre title="{{diff.0}}"class="brush: diff">
+{{diff.1}}
+</pre>
+{% endfor %}
+
+<script type="text/javascript">
+	SyntaxHighlighter.all();
+</script>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}DjangoGit: {{name}}/?{% endblock %}
+{% block content %}
+<h2><a href="/repo/{{name}}/branch/master/">{{name}}</a>{% if path %} / <a href="">{{path}}</a>{% endif %}</h2>
+
+<a href="/">Home</a>
+
+<div id="files">
+    <p>Files</p>
+    {% include "filelist.html" %}
+</div>
+{% endblock %}
